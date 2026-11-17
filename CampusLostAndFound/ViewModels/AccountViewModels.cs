@@ -71,3 +71,4 @@ namespace CampusLostAndFound.ViewModels
         public string Role { get; set; } = string.Empty;
     }
 }
+

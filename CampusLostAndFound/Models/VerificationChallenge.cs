@@ -42,3 +42,4 @@ namespace CampusLostAndFound.Models
         public DateTime? AnsweredAt { get; set; }
     }
 }
+

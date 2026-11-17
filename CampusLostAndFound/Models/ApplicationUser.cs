@@ -23,3 +23,4 @@ namespace CampusLostAndFound.Models
         public virtual ICollection<DisposalRecord> AuthorizedDisposals { get; set; } = new List<DisposalRecord>();
     }
 }
+

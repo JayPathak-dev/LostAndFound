@@ -34,3 +34,4 @@ namespace CampusLostAndFound.Models
             : $"{BuildingName} (Block {BlockName}) - {AreaName} ({Floor ?? "Ground"})";
     }
 }
+

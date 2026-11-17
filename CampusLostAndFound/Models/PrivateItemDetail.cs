@@ -29,3 +29,4 @@ namespace CampusLostAndFound.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
+

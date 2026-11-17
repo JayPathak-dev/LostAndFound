@@ -146,3 +146,4 @@ namespace CampusLostAndFound.ViewModels
         public IEnumerable<SelectListItem>? Locations { get; set; }
     }
 }
+

@@ -31,3 +31,4 @@ namespace CampusLostAndFound.Models
         public string? AdditionalInformation { get; set; }
     }
 }
+

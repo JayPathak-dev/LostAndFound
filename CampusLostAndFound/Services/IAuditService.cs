@@ -11,3 +11,4 @@ namespace CampusLostAndFound.Services
         Task<List<AuditEntry>> GetLogsForRecordAsync(string targetRecord, string targetRecordId);
     }
 }
+

@@ -13,3 +13,4 @@ namespace CampusLostAndFound.Services
         Task<(bool Passed, double AverageScore, string SuggestedOutcome)> EvaluateClaimVerificationAsync(int claimId);
     }
 }
+

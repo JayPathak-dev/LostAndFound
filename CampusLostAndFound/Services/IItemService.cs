@@ -19,3 +19,4 @@ namespace CampusLostAndFound.Services
         Task<bool> UpdateItemStatusAsync(int itemId, string newStatus, string actorId, string? reason);
     }
 }
+

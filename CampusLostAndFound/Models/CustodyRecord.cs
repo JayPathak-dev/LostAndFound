@@ -32,3 +32,4 @@ namespace CampusLostAndFound.Models
         public string? Notes { get; set; }
     }
 }
+

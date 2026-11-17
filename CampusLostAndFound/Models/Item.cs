@@ -82,3 +82,4 @@ namespace CampusLostAndFound.Models
         public virtual DisposalRecord? DisposalRecord { get; set; }
     }
 }
+

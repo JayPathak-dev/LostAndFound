@@ -13,3 +13,4 @@ namespace CampusLostAndFound.Services
         Task<(bool Success, int DisposalId, string? ErrorMessage)> RecordDisposalAsync(DisposalCreateViewModel model, string authorizedUserId, string? userEmail);
     }
 }
+

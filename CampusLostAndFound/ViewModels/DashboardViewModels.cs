@@ -225,3 +225,4 @@ namespace CampusLostAndFound.ViewModels
         public bool IsActive { get; set; } = true;
     }
 }
+

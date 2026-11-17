@@ -245,3 +245,4 @@ For academic project evaluation, follow this step-by-step demonstration:
    - View system recovery rate percentage, category distribution, and location incident density.
    - Review **Retention Policy** and **Unclaimed Items**.
    - Inspect **System Audit Trail** showing timestamps, actors, and actions for every stage of the lifecycle.
+

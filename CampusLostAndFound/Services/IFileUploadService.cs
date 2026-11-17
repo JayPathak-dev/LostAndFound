@@ -9,3 +9,4 @@ namespace CampusLostAndFound.Services
         void DeleteImage(string? relativeFilePath);
     }
 }
+

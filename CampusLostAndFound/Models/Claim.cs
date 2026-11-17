@@ -57,3 +57,4 @@ namespace CampusLostAndFound.Models
         public virtual Handover? Handover { get; set; }
     }
 }
+
