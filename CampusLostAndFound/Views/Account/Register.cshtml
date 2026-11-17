@@ -1,0 +1,83 @@
+@model CampusLostAndFound.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Student / Staff Registration";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <div class="text-center mb-4">
+                    <div class="bg-primary-subtle text-primary rounded-circle d-inline-flex p-3 mb-2">
+                        <i class="bi bi-person-plus fs-2"></i>
+                    </div>
+                    <h3 class="fw-bold text-slate">Register Account</h3>
+                    <p class="text-muted small">Join the university lost and found recovery network</p>
+                </div>
+
+                <form asp-action="Register" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small" role="alert"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="FullName" class="form-label fw-semibold small text-muted"></label>
+                        <input asp-for="FullName" class="form-control bg-light" placeholder="e.g. John Doe" />
+                        <span asp-validation-for="FullName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label fw-semibold small text-muted"></label>
+                        <input asp-for="Email" class="form-control bg-light" placeholder="e.g. yourname@campus.edu" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="RegistrationNumber" class="form-label fw-semibold small text-muted"></label>
+                            <input asp-for="RegistrationNumber" class="form-control bg-light" placeholder="e.g. 21BCE1042" />
+                            <span asp-validation-for="RegistrationNumber" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="PhoneNumber" class="form-label fw-semibold small text-muted"></label>
+                            <input asp-for="PhoneNumber" class="form-control bg-light" placeholder="+91 9876543210" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="Password" class="form-label fw-semibold small text-muted"></label>
+                            <input asp-for="Password" class="form-control bg-light" placeholder="At least 6 characters" />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ConfirmPassword" class="form-label fw-semibold small text-muted"></label>
+                            <input asp-for="ConfirmPassword" class="form-control bg-light" placeholder="Confirm password" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="p-3 bg-light rounded-3 border small mb-4 text-muted">
+                        <i class="bi bi-shield-check text-success me-1"></i>
+                        New public registrations are automatically assigned the <strong>Student / Staff</strong> role with standard reporting and claiming privileges. Privileged roles are granted by campus administration.
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                        <i class="bi bi-person-check me-1"></i> Complete Registration
+                    </button>
+                </form>
+
+                <div class="border-top mt-4 pt-3 text-center">
+                    <p class="small text-muted mb-0">
+                        Already have an account?
+                        <a asp-action="Login" class="text-primary fw-semibold text-decoration-none">Sign in here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

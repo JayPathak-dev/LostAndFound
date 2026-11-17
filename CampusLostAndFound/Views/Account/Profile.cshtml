@@ -1,0 +1,54 @@
+@model CampusLostAndFound.ViewModels.ProfileViewModel
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="bg-primary-subtle text-primary rounded-circle p-3">
+                        <i class="bi bi-person-badge fs-2"></i>
+                    </div>
+                    <div>
+                        <h3 class="fw-bold text-slate mb-1">User Profile</h3>
+                        <span class="badge bg-primary text-white">@Model.Role</span>
+                    </div>
+                </div>
+
+                <form asp-action="Profile" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="UserId" />
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label fw-semibold small text-muted"></label>
+                        <input asp-for="Email" class="form-control bg-light" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="FullName" class="form-label fw-semibold small text-muted"></label>
+                        <input asp-for="FullName" class="form-control" />
+                        <span asp-validation-for="FullName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="RegistrationNumber" class="form-label fw-semibold small text-muted"></label>
+                        <input asp-for="RegistrationNumber" class="form-control" />
+                        <span asp-validation-for="RegistrationNumber" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="PhoneNumber" class="form-label fw-semibold small text-muted"></label>
+                        <input asp-for="PhoneNumber" class="form-control" />
+                        <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold">
+                        <i class="bi bi-save me-1"></i> Update Profile Details
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

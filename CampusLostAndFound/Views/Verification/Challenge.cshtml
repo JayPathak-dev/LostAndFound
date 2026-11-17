@@ -1,0 +1,55 @@
+@model List<CampusLostAndFound.ViewModels.ChallengeAnswerInputModel>
+@{
+    var claim = ViewBag.Claim as CampusLostAndFound.ViewModels.ClaimDetailsViewModel;
+    ViewData["Title"] = "Ownership Verification Challenge";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="bg-warning-subtle text-warning-emphasis rounded-circle p-3">
+                        <i class="bi bi-shield-lock fs-2"></i>
+                    </div>
+                    <div>
+                        <h2 class="fw-bold text-slate mb-1">Ownership Verification Challenge</h2>
+                        <p class="text-muted small mb-0">Claiming Item: <strong>@(claim?.ItemTitle ?? "Misplaced Item")</strong></p>
+                    </div>
+                </div>
+
+                <div class="alert alert-info py-3 px-3 small border-0 mb-4 rounded-3">
+                    <i class="bi bi-info-circle-fill me-1"></i>
+                    <strong>Private Attributes Verification:</strong> To ensure only the genuine owner can reclaim this item, please answer the following questions regarding private identifiers known only to the true owner.
+                </div>
+
+                <form asp-action="Challenge" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="claimId" value="@(claim?.ClaimId)" />
+
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        <input type="hidden" name="answers[@i].ChallengeId" value="@Model[i].ChallengeId" />
+                        <input type="hidden" name="answers[@i].ChallengeType" value="@Model[i].ChallengeType" />
+                        <input type="hidden" name="answers[@i].QuestionPrompt" value="@Model[i].QuestionPrompt" />
+
+                        <div class="mb-4 p-3 bg-light rounded-3 border">
+                            <label class="form-label fw-bold text-slate small">
+                                <span class="badge bg-secondary me-2">Question @(i + 1)</span>
+                                @Model[i].QuestionPrompt
+                            </label>
+                            <textarea name="answers[@i].Answer" rows="3" class="form-control bg-white" placeholder="Type your detailed answer here..." required>@Model[i].Answer</textarea>
+                        </div>
+                    }
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a asp-controller="Claims" asp-action="Details" asp-route-id="@(claim?.ClaimId)" class="btn btn-outline-secondary">Skip / Answer Later</a>
+                        <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold">
+                            <i class="bi bi-check2-circle me-1"></i> Submit Verification Answers
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

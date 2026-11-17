@@ -1,0 +1,69 @@
+@{
+    ViewData["Title"] = "About Campus Lost and Found Platform";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <span class="badge bg-primary-subtle text-primary fw-semibold px-3 py-2 rounded-pill mb-3" style="width: fit-content;">
+                    Academic B.Tech CSE Capstone Project
+                </span>
+                <h1 class="fw-bold text-slate mb-3">Campus Lost & Found Management System</h1>
+                <p class="lead text-muted mb-4">
+                    An enterprise-grade, privacy-conscious university platform replacing informal WhatsApp groups and physical noticeboards with an accountable, supervised belongings recovery system.
+                </p>
+
+                <h4 class="fw-bold text-slate mt-3 mb-3"><i class="bi bi-layers text-primary me-2"></i> Technical Architecture</h4>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3 h-100 border">
+                            <h6 class="fw-bold text-primary">Presentation Layer</h6>
+                            <p class="small text-muted mb-0">ASP.NET Core Razor Views, HTML5, CSS3, Bootstrap 5, Bootstrap Icons, responsive mobile-first layouts.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3 h-100 border">
+                            <h6 class="fw-bold text-primary">Business Logic Layer</h6>
+                            <p class="small text-muted mb-0">C# Services, Weighted rule-based matching engine, dynamic ownership verification, role authorization, ACID handovers.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-3 h-100 border">
+                            <h6 class="fw-bold text-primary">Data Access Layer</h6>
+                            <p class="small text-muted mb-0">Microsoft SQL Server, Entity Framework Core Code-First, comprehensive relational schema with 11 entities, audit trail.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h4 class="fw-bold text-slate mt-2 mb-3"><i class="bi bi-shield-check text-success me-2"></i> Key Innovations</h4>
+                <ul class="list-group list-group-flush mb-4">
+                    <li class="list-group-item px-0">
+                        <strong>Confidential Ownership Verification:</strong> Found reports maintain private identifying attributes (internal contents, markings, scratches) that are never exposed publicly and used to verify claimant statements.
+                    </li>
+                    <li class="list-group-item px-0">
+                        <strong>Weighted Rule-Based Matching:</strong> Automatic discovery of related reports using multi-parameter scoring (title, keywords, category, campus location, timestamp proximity).
+                    </li>
+                    <li class="list-group-item px-0">
+                        <strong>Role-Based Accountability:</strong> Four discrete roles (Student/Staff, Security Personnel, Campus Administrator, System Administrator) enforcing strict operational boundaries.
+                    </li>
+                    <li class="list-group-item px-0">
+                        <strong>Supervised Physical Handover:</strong> Transactional handover records with identity proof reference, preventing unauthorized possession.
+                    </li>
+                    <li class="list-group-item px-0">
+                        <strong>Configurable Retention & Disposal:</strong> Category-specific custody retention limits with authorized audit-tracked disposal.
+                    </li>
+                </ul>
+
+                <div class="d-flex gap-3">
+                    <a asp-controller="Items" asp-action="Index" class="btn btn-primary">
+                        <i class="bi bi-search me-1"></i> Explore Public Board
+                    </a>
+                    <a asp-controller="Home" asp-action="Contact" class="btn btn-outline-secondary">
+                        <i class="bi bi-envelope me-1"></i> Contact Security Desk
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

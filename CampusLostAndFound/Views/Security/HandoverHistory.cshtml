@@ -1,0 +1,68 @@
+@model List<CampusLostAndFound.ViewModels.HandoverRecordViewModel>
+@{
+    ViewData["Title"] = "Supervised Handover Audit History";
+}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-slate mb-1">Supervised Handover Audit Trail</h2>
+            <p class="text-muted small mb-0">Permanent log of all physical item restorations supervised by campus security.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Security Dashboard
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Handover #</th>
+                            <th>Restored Item</th>
+                            <th>Receiving Owner</th>
+                            <th>ID / Proof Reference</th>
+                            <th>Supervising Officer</th>
+                            <th>Date & Time</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var h in Model)
+                        {
+                            <tr>
+                                <td><strong>#@h.HandoverId</strong></td>
+                                <td>
+                                    <strong>@h.ItemTitle</strong>
+                                </td>
+                                <td>
+                                    <strong>@h.ReceivingUserName</strong>
+                                    <div class="text-muted small">Reg: @h.ReceivingUserRegNo</div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">
+                                        <i class="bi bi-person-badge text-primary me-1"></i> @h.ProofReference
+                                    </span>
+                                </td>
+                                <td>@h.SecurityOfficerName</td>
+                                <td class="text-muted small">@h.HandoverDateTime.ToString("MMM dd, yyyy - hh:mm tt")</td>
+                                <td class="small text-muted">@(string.IsNullOrEmpty(h.Notes) ? "Handover verified in person." : h.Notes)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-inbox display-4 mb-2 d-block"></i>
+                <h5>No Handover Records Yet</h5>
+                <p>When items are officially returned to their verified owners, permanent handover records will appear here.</p>
+            </div>
+        }
+    </div>
+</div>

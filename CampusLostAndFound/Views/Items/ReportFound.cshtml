@@ -1,0 +1,122 @@
+@model CampusLostAndFound.ViewModels.ItemCreateViewModel
+@{
+    ViewData["Title"] = "Report Found Item";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="bg-success-subtle text-success rounded-circle p-3">
+                        <i class="bi bi-box-seam fs-2"></i>
+                    </div>
+                    <div>
+                        <h2 class="fw-bold text-slate mb-1">Report a Found Belonging</h2>
+                        <p class="text-muted small mb-0">Help reunite misplaced property with its rightful student or staff owner.</p>
+                    </div>
+                </div>
+
+                <form asp-action="ReportFound" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="ReportType" value="Found" />
+
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small" role="alert"></div>
+
+                    <!-- Part 1: Public Information -->
+                    <h5 class="fw-bold text-slate border-bottom pb-2 mb-3">1. Public Item Details (Visible on Board)</h5>
+
+                    <div class="mb-3">
+                        <label asp-for="Title" class="form-label fw-semibold text-slate small"></label>
+                        <input asp-for="Title" class="form-control" placeholder="e.g. Black Dell 65W Laptop Charger" />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="CategoryId" class="form-label fw-semibold text-slate small"></label>
+                            <select asp-for="CategoryId" asp-items="Model.Categories" class="form-select">
+                                <option value="">-- Select Category --</option>
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="LocationId" class="form-label fw-semibold text-slate small"></label>
+                            <select asp-for="LocationId" asp-items="Model.Locations" class="form-select">
+                                <option value="">-- Select Campus Found Location --</option>
+                            </select>
+                            <span asp-validation-for="LocationId" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="ItemDateTime" class="form-label fw-semibold text-slate small">Date & Time Found</label>
+                            <input asp-for="ItemDateTime" type="datetime-local" class="form-control" />
+                            <span asp-validation-for="ItemDateTime" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ImageFile" class="form-label fw-semibold text-slate small"></label>
+                            <input asp-for="ImageFile" type="file" class="form-control" accept=".jpg,.jpeg,.png,.webp" />
+                            <span class="text-muted small">Photograph (Optional)</span>
+                            <span asp-validation-for="ImageFile" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Description" class="form-label fw-semibold text-slate small">General Public Description</label>
+                        <textarea asp-for="Description" rows="3" class="form-control" placeholder="General description visible to all users (keep private secrets hidden here!)..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Part 2: Private Ownership Verification Details -->
+                    <div class="p-4 rounded-3 border mb-4" style="background-color: #FFFDF5; border-color: #FDE68A !important;">
+                        <div class="d-flex align-items-center gap-2 text-warning-emphasis mb-2">
+                            <i class="bi bi-shield-lock-fill fs-5 text-warning"></i>
+                            <h5 class="fw-bold mb-0 text-dark">2. Private Ownership Verification Details</h5>
+                        </div>
+                        <div class="alert alert-warning py-2 px-3 small border-0 mb-3" style="background-color: #FEF3C7; color: #92400E;">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                            <strong>Important Privacy Notice:</strong> These details will <u>remain private</u> and will NEVER appear on the public board. They are strictly used to verify ownership claims.
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="DistinctiveMarks" class="form-label fw-semibold small text-slate"></label>
+                            <input asp-for="DistinctiveMarks" class="form-control bg-white" placeholder="e.g., Small tear near left zipper, yellow tape 2 inches from connector" />
+                            <span asp-validation-for="DistinctiveMarks" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="HiddenFeatures" class="form-label fw-semibold small text-slate"></label>
+                            <input asp-for="HiddenFeatures" class="form-control bg-white" placeholder="e.g., Secret cash flap, specific engraving, etched initials 'JD'" />
+                            <span asp-validation-for="HiddenFeatures" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="InternalContents" class="form-label fw-semibold small text-slate"></label>
+                            <input asp-for="InternalContents" class="form-control bg-white" placeholder="e.g., Blue notebook, metro travel smart card, library card no ending in 1180" />
+                            <span asp-validation-for="InternalContents" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-0">
+                            <label asp-for="AdditionalIdentifiers" class="form-label fw-semibold small text-slate"></label>
+                            <input asp-for="AdditionalIdentifiers" class="form-control bg-white" placeholder="e.g., Serial number barcode ending in 4982, hostel room tag 304" />
+                            <span asp-validation-for="AdditionalIdentifiers" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-success px-4 py-2 fw-semibold">
+                            <i class="bi bi-check-circle me-1"></i> Submit Found Item Report
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

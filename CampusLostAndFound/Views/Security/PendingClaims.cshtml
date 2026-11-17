@@ -1,0 +1,73 @@
+@model List<CampusLostAndFound.ViewModels.ClaimDetailsViewModel>
+@{
+    ViewData["Title"] = "Pending Ownership Claims Review Queue";
+}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-slate mb-1">Ownership Claims Review Queue</h2>
+            <p class="text-muted small mb-0">Evaluate student/staff ownership statements and private verification responses.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Security Dashboard
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Claim ID</th>
+                            <th>Target Found Item</th>
+                            <th>Claimant Details</th>
+                            <th>Category & Location</th>
+                            <th>Submitted</th>
+                            <th>Verification Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var claim in Model)
+                        {
+                            <tr>
+                                <td><strong>#@claim.ClaimId</strong></td>
+                                <td>
+                                    <strong>@claim.ItemTitle</strong>
+                                </td>
+                                <td>
+                                    <strong>@claim.ClaimantName</strong>
+                                    <div class="text-muted small">@claim.ClaimantEmail &bull; @(claim.ClaimantRegNo ?? "N/A")</div>
+                                </td>
+                                <td>
+                                    <div>@claim.ItemCategory</div>
+                                    <div class="text-muted small">@claim.ItemLocation</div>
+                                </td>
+                                <td class="text-muted small">@claim.SubmittedAt.ToString("MMM dd, yyyy - hh:mm tt")</td>
+                                <td>
+                                    <span class="badge badge-status badge-status-@claim.Status">@claim.Status</span>
+                                </td>
+                                <td>
+                                    <a asp-action="ReviewClaim" asp-route-claimId="@claim.ClaimId" class="btn btn-sm btn-warning fw-semibold">
+                                        <i class="bi bi-shield-check me-1"></i> Review Claim
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-check2-all display-4 mb-2 text-success d-block"></i>
+                <h5>All Claims Processed</h5>
+                <p>There are no pending claims requiring review at this time.</p>
+            </div>
+        }
+    </div>
+</div>

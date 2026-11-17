@@ -1,0 +1,68 @@
+@model List<CampusLostAndFound.ViewModels.ClaimSummaryViewModel>
+@{
+    ViewData["Title"] = "My Ownership Claims";
+}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-slate mb-1">My Ownership Claims</h2>
+            <p class="text-muted small mb-0">Track verification status, review decisions, and supervised handover instructions.</p>
+        </div>
+        <a asp-controller="Items" asp-action="Index" class="btn btn-outline-primary">
+            <i class="bi bi-search me-1"></i> Browse Found Items
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Claim ID</th>
+                            <th>Item Title</th>
+                            <th>Category</th>
+                            <th>Claim Status</th>
+                            <th>Submitted Date</th>
+                            <th>Review Remarks</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var claim in Model)
+                        {
+                            <tr>
+                                <td><strong>#@claim.ClaimId</strong></td>
+                                <td><strong>@claim.ItemTitle</strong></td>
+                                <td>@claim.CategoryName</td>
+                                <td>
+                                    <span class="badge badge-status badge-status-@claim.Status">@claim.Status</span>
+                                </td>
+                                <td class="text-muted small">@claim.SubmittedAt.ToString("MMM dd, yyyy - hh:mm tt")</td>
+                                <td>
+                                    <span class="small text-muted">@(string.IsNullOrEmpty(claim.ReviewNotes) ? "Under review" : claim.ReviewNotes)</span>
+                                </td>
+                                <td>
+                                    <a asp-controller="Claims" asp-action="Details" asp-route-id="@claim.ClaimId" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-eye me-1"></i> Track Claim
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-inbox display-4 mb-3 d-block"></i>
+                <h5>No Ownership Claims</h5>
+                <p>You have not submitted claims on any found items yet.</p>
+                <a asp-controller="Items" asp-action="Index" class="btn btn-primary">Browse Active Found Items</a>
+            </div>
+        }
+    </div>
+</div>

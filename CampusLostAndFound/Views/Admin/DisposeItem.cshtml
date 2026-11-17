@@ -1,0 +1,69 @@
+@model CampusLostAndFound.ViewModels.DisposalCreateViewModel
+@{
+    ViewData["Title"] = "Authorize Item Disposal";
+}
+
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="bg-danger-subtle text-danger rounded-circle p-3">
+                        <i class="bi bi-trash3-fill fs-2"></i>
+                    </div>
+                    <div>
+                        <h2 class="fw-bold text-slate mb-1">Authorize Item Disposal</h2>
+                        <p class="text-muted small mb-0">Record formal authorization for unclaimed belonging <strong>@Model.ItemTitle</strong></p>
+                    </div>
+                </div>
+
+                <div class="p-3 bg-light rounded-3 border mb-4">
+                    <div class="row g-2 small">
+                        <div class="col-sm-6">
+                            <span class="text-muted">Item Category:</span> <strong>@Model.CategoryName</strong>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted">Custody Duration:</span> <strong>@Model.DaysInCustody Days</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <form asp-action="DisposeItem" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="ItemId" />
+                    <input type="hidden" asp-for="ItemTitle" />
+                    <input type="hidden" asp-for="CategoryName" />
+                    <input type="hidden" asp-for="DaysInCustody" />
+
+                    <div class="mb-3">
+                        <label asp-for="DisposalReason" class="form-label fw-semibold text-slate small"></label>
+                        <textarea asp-for="DisposalReason" rows="3" class="form-control" placeholder="Specify authorized disposal reason (e.g. Donated to university student welfare trust / Sent for electronics e-waste recycling)..."></textarea>
+                        <span asp-validation-for="DisposalReason" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Notes" class="form-label fw-semibold text-slate small"></label>
+                        <textarea asp-for="Notes" rows="3" class="form-control" placeholder="Additional notes or approval order reference number..."></textarea>
+                        <span asp-validation-for="Notes" class="text-danger small"></span>
+                    </div>
+
+                    <div class="alert alert-warning small border-0 rounded-3 mb-4">
+                        <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                        <strong>Administrative Action:</strong> This action permanently marks the item as <strong>Disposed</strong>, releases security custody, and enters an indelible audit record.
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a asp-action="Unclaimed" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-danger px-4 py-2 fw-semibold">
+                            <i class="bi bi-check2-circle me-1"></i> Authorize & Log Disposal
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

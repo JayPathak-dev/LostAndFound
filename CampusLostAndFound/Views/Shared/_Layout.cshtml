@@ -1,0 +1,241 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Campus Lost and Found</title>
+    <!-- Bootstrap 5 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <!-- Custom Theme CSS -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-shield-check fs-4"></i>
+                    <span>Campus<span class="text-primary-subtle fw-normal">Lost&Found</span></span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house me-1"></i> Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Items" asp-action="Index">
+                                <i class="bi bi-search me-1"></i> Browse Found Items
+                            </a>
+                        </li>
+
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="reportDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-plus-circle me-1"></i> Report Item
+                                </a>
+                                <ul class="dropdown-menu shadow-sm" aria-labelledby="reportDropdown">
+                                    <li>
+                                        <a class="dropdown-item py-2" asp-controller="Items" asp-action="ReportLost">
+                                            <i class="bi bi-exclamation-triangle text-danger me-2"></i> Report Lost Item
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item py-2" asp-controller="Items" asp-action="ReportFound">
+                                            <i class="bi bi-check-circle text-success me-2"></i> Report Found Item
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Dashboard" asp-action="Index">
+                                    <i class="bi bi-speedometer2 me-1"></i> My Dashboard
+                                </a>
+                            </li>
+
+                            @if (User.IsInRole("SecurityPersonnel") || User.IsInRole("CampusAdministrator") || User.IsInRole("SystemAdministrator"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-warning" href="#" id="securityDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-shield-lock me-1"></i> Security Desk
+                                    </a>
+                                    <ul class="dropdown-menu shadow-sm" aria-labelledby="securityDropdown">
+                                        <li><a class="dropdown-item" asp-controller="Security" asp-action="Index"><i class="bi bi-grid me-2"></i> Security Dashboard</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Security" asp-action="PendingClaims"><i class="bi bi-clock-history me-2"></i> Pending Claims</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Security" asp-action="CustodyList"><i class="bi bi-archive me-2"></i> Items in Custody</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Security" asp-action="HandoverHistory"><i class="bi bi-arrow-left-right me-2"></i> Handover History</a></li>
+                                    </ul>
+                                </li>
+                            }
+
+                            @if (User.IsInRole("CampusAdministrator") || User.IsInRole("SystemAdministrator"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle text-info" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-sliders me-1"></i> Administration
+                                    </a>
+                                    <ul class="dropdown-menu shadow-sm" aria-labelledby="adminDropdown">
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Index"><i class="bi bi-graph-up me-2"></i> Admin Overview</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Categories"><i class="bi bi-tags me-2"></i> Categories</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Locations"><i class="bi bi-geo-alt me-2"></i> Campus Locations</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Retention"><i class="bi bi-hourglass-split me-2"></i> Retention Policy</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Unclaimed"><i class="bi bi-box-seam me-2"></i> Unclaimed & Disposal</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Reports"><i class="bi bi-file-earmark-bar-graph me-2"></i> Reports & Stats</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="AuditLogs"><i class="bi bi-journal-text me-2"></i> Audit Logs</a></li>
+                                        @if (User.IsInRole("SystemAdministrator"))
+                                        {
+                                            <li><hr class="dropdown-divider"></li>
+                                            <li><a class="dropdown-item text-primary" asp-controller="SystemAdmin" asp-action="Users"><i class="bi bi-people me-2"></i> User & Role Management</a></li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                        }
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            var user = await UserManager.GetUserAsync(User);
+                            <li class="nav-item dropdown me-2">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle fs-5"></i>
+                                    <span>@(user?.FullName ?? User.Identity?.Name)</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userMenu">
+                                    <li><span class="dropdown-item-text small text-muted">@User.Identity?.Name</span></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile"><i class="bi bi-person me-2"></i> Profile</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="MyReports"><i class="bi bi-file-text me-2"></i> My Reports</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="MyClaims"><i class="bi bi-patch-check me-2"></i> My Claims</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="Matches"><i class="bi bi-stars me-2"></i> Match Suggestions</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="bi bi-box-arrow-right me-2"></i> Sign Out
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">
+                                    <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                                </a>
+                            </li>
+                            <li class="nav-item ms-lg-2 mt-2 mt-lg-0">
+                                <a class="btn btn-sm btn-primary" asp-controller="Account" asp-action="Register">
+                                    <i class="bi bi-person-plus me-1"></i> Register
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="flex-grow-1">
+        <!-- Toast & Feedback Messages -->
+        <div class="container mt-3">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show d-flex align-items-center shadow-sm" role="alert">
+                    <i class="bi bi-check-circle-fill fs-5 me-2"></i>
+                    <div>@TempData["SuccessMessage"]</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center shadow-sm" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill fs-5 me-2"></i>
+                    <div>@TempData["ErrorMessage"]</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["InfoMessage"] != null)
+            {
+                <div class="alert alert-info alert-dismissible fade show d-flex align-items-center shadow-sm" role="alert">
+                    <i class="bi bi-info-circle-fill fs-5 me-2"></i>
+                    <div>@TempData["InfoMessage"]</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+        </div>
+
+        @RenderBody()
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4 col-md-6">
+                    <h5 class="text-white fw-bold d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-shield-check text-primary"></i>
+                        Campus Lost & Found
+                    </h5>
+                    <p class="small text-light-emphasis">
+                        A centralized university management platform for reporting misplaced belongings, discovering found articles, verifying ownership through private attributes, and completing supervised handovers.
+                    </p>
+                </div>
+                <div class="col-lg-2 col-md-3 col-6">
+                    <h6 class="text-white fw-semibold mb-3">Quick Links</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="mb-2"><a asp-controller="Items" asp-action="Index">Public Item Board</a></li>
+                        <li class="mb-2"><a asp-controller="Items" asp-action="ReportLost">Report Lost Item</a></li>
+                        <li class="mb-2"><a asp-controller="Items" asp-action="ReportFound">Report Found Item</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-3 col-6">
+                    <h6 class="text-white fw-semibold mb-3">Campus Security</h6>
+                    <ul class="list-unstyled small text-light-emphasis">
+                        <li class="mb-2"><i class="bi bi-geo-alt me-1 text-primary"></i> Main Security Control Room, Ground Floor</li>
+                        <li class="mb-2"><i class="bi bi-telephone me-1 text-primary"></i> 24/7 Security Helpline: +91 1800-CAMPUS</li>
+                        <li class="mb-2"><i class="bi bi-envelope me-1 text-primary"></i> security.custody@campus.edu</li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="text-white fw-semibold mb-3">Academic Project</h6>
+                    <p class="small text-light-emphasis mb-2">
+                        B.Tech Computer Science and Engineering Major Project. Developed with C#, ASP.NET Core MVC, Entity Framework Core, and Microsoft SQL Server.
+                    </p>
+                    <span class="badge bg-secondary-subtle text-light border border-secondary-subtle">MVC 3-Layer Architecture</span>
+                </div>
+            </div>
+            <hr class="border-secondary opacity-25" />
+            <div class="d-flex flex-wrap justify-content-between align-items-center small text-light-emphasis">
+                <div>&copy; @DateTime.UtcNow.Year Campus Lost and Found Management System. All rights reserved.</div>
+                <div>
+                    <a asp-controller="Home" asp-action="Privacy" class="me-3">Privacy Policy</a>
+                    <a asp-controller="Home" asp-action="About">About Project</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

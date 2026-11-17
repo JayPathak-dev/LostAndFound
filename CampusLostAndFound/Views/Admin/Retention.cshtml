@@ -1,0 +1,81 @@
+@model List<CampusLostAndFound.Models.ItemCategory>
+@{
+    ViewData["Title"] = "Campus Retention Policy Configuration";
+    var unclaimed = ViewBag.Unclaimed as List<CampusLostAndFound.ViewModels.UnclaimedItemViewModel>;
+}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-slate mb-1">Campus Custody Retention Policy</h2>
+            <p class="text-muted small mb-0">Define statutory retention windows per category before unclaimed items are reviewed for disposal.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Unclaimed" class="btn btn-warning">
+                <i class="bi bi-box-seam me-1"></i> Review Unclaimed Items (@(unclaimed?.Count ?? 0))
+            </a>
+            <a asp-action="Index" class="btn btn-outline-secondary">Back to Overview</a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                <h5 class="fw-bold text-slate mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-hourglass-split text-primary"></i> Category Retention Durations
+                </h5>
+                <p class="small text-muted mb-3">Statutory university limits in days before items become eligible for campus charity or disposal.</p>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle small">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Category</th>
+                                <th>Policy Limit</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cat in Model)
+                            {
+                                <tr>
+                                    <td><strong>@cat.CategoryName</strong></td>
+                                    <td>
+                                        <span class="badge bg-primary-subtle text-primary border">@cat.RetentionPeriodDays Days</span>
+                                    </td>
+                                    <td>
+                                        <a asp-action="EditCategory" asp-route-id="@cat.CategoryId" class="btn btn-sm btn-outline-secondary">
+                                            Edit Policy
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                <h5 class="fw-bold text-slate mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-exclamation-triangle text-warning"></i> Retention Policy Status
+                </h5>
+                <div class="alert alert-info small border-0 rounded-3 mb-3">
+                    <i class="bi bi-info-circle-fill me-1"></i>
+                    <strong>Automated Tracking:</strong> The system computes the age of every found belonging from its date of incident against its category's retention window. Items past their deadline are flagged as <em>Unclaimed</em> for official administrative review.
+                </div>
+                <div class="p-3 bg-light rounded-3 border">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="small text-muted">Currently Active Found Items:</span>
+                        <strong class="text-slate">@(unclaimed?.Count ?? 0)</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-0">
+                        <span class="small text-muted">Eligible for Disposal Review:</span>
+                        <strong class="text-danger">@(unclaimed?.Count(u => u.IsOverdueForDisposal) ?? 0)</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

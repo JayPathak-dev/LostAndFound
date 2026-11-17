@@ -1,0 +1,223 @@
+@model CampusLostAndFound.ViewModels.ItemDetailsViewModel
+@{
+    ViewData["Title"] = Model.Title;
+    var matches = ViewBag.Matches as List<CampusLostAndFound.ViewModels.MatchSuggestionCardViewModel>;
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Items" asp-action="Index">Items</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Main Item Details -->
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+                    <div>
+                        <span class="badge badge-type-@Model.ReportType me-2 px-3 py-2">
+                            <i class="bi bi-tag-fill me-1"></i> @Model.ReportType Item Report
+                        </span>
+                        <span class="badge badge-status badge-status-@Model.Status px-3 py-2">
+                            Status: @Model.Status
+                        </span>
+                    </div>
+                    <span class="text-muted small">
+                        Reported on @Model.CreatedAt.ToString("MMM dd, yyyy - hh:mm tt")
+                    </span>
+                </div>
+
+                <h2 class="fw-bold text-slate mb-3">@Model.Title</h2>
+
+                @if (!string.IsNullOrEmpty(Model.ImagePath))
+                {
+                    <div class="mb-4 rounded-3 overflow-hidden text-center bg-light border">
+                        <img src="@Model.ImagePath" alt="@Model.Title" class="img-fluid" style="max-height: 400px; object-fit: contain;" />
+                    </div>
+                }
+
+                <h5 class="fw-bold text-slate mb-2">Public Description</h5>
+                <p class="text-muted mb-4" style="line-height: 1.7; white-space: pre-line;">@Model.Description</p>
+
+                <div class="row g-3 p-3 bg-light rounded-3 border mb-4">
+                    <div class="col-sm-6">
+                        <span class="text-muted small d-block">Category</span>
+                        <strong class="text-slate"><i class="bi bi-tag text-primary me-1"></i> @Model.CategoryName</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        <span class="text-muted small d-block">Incident Campus Location</span>
+                        <strong class="text-slate"><i class="bi bi-geo-alt text-danger me-1"></i> @Model.LocationName</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        <span class="text-muted small d-block">Date & Time of Incident</span>
+                        <strong class="text-slate"><i class="bi bi-calendar-event text-secondary me-1"></i> @Model.ItemDateTime.ToString("f")</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        <span class="text-muted small d-block">Reported By</span>
+                        <strong class="text-slate"><i class="bi bi-person text-info me-1"></i> @Model.ReporterName</strong>
+                    </div>
+                </div>
+
+                <!-- CRITICAL SECURITY / PRIVACY CHECK: Private Details visible ONLY to Owner or Security/Admin -->
+                @if (Model.PrivateDetails != null)
+                {
+                    <div class="private-details-card mb-4">
+                        <div class="private-details-header">
+                            <i class="bi bi-lock-fill fs-5"></i>
+                            <span>Confidential Ownership Verification Details (Protected)</span>
+                        </div>
+                        <p class="small text-muted mb-3">
+                            <i class="bi bi-shield-shaded me-1"></i> These attributes are strictly hidden from the public item board and are only visible to you (the reporter) and authorized campus security officers to evaluate ownership claims.
+                        </p>
+
+                        <div class="row g-3">
+                            @if (!string.IsNullOrEmpty(Model.PrivateDetails.DistinctiveMarks))
+                            {
+                                <div class="col-md-6">
+                                    <span class="small fw-bold text-secondary d-block">Distinctive Marks / Scratches:</span>
+                                    <span class="text-slate">@Model.PrivateDetails.DistinctiveMarks</span>
+                                </div>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.PrivateDetails.HiddenFeatures))
+                            {
+                                <div class="col-md-6">
+                                    <span class="small fw-bold text-secondary d-block">Hidden Features / Engravings:</span>
+                                    <span class="text-slate">@Model.PrivateDetails.HiddenFeatures</span>
+                                </div>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.PrivateDetails.InternalContents))
+                            {
+                                <div class="col-md-6">
+                                    <span class="small fw-bold text-secondary d-block">Internal Belongings / Contents:</span>
+                                    <span class="text-slate">@Model.PrivateDetails.InternalContents</span>
+                                </div>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.PrivateDetails.AdditionalIdentifiers))
+                            {
+                                <div class="col-md-6">
+                                    <span class="small fw-bold text-secondary d-block">Additional Identifiers / Serial suffix:</span>
+                                    <span class="text-slate">@Model.PrivateDetails.AdditionalIdentifiers</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+
+                <!-- Active Custody Location Banner -->
+                @if (!string.IsNullOrEmpty(Model.CurrentCustodyLocation))
+                {
+                    <div class="alert alert-secondary d-flex align-items-center gap-3 rounded-3 mb-0">
+                        <i class="bi bi-archive-fill text-primary fs-3"></i>
+                        <div>
+                            <span class="fw-bold d-block text-slate">Security Physical Custody</span>
+                            <span class="small text-muted">Stored at: <strong>@Model.CurrentCustodyLocation</strong> (Received: @Model.CustodyReceivedAt?.ToString("g"))</span>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- Potential Match Suggestions discovered by Matching Engine -->
+            @if (matches != null && matches.Any())
+            {
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                    <h5 class="fw-bold text-slate mb-3 d-flex align-items-center gap-2">
+                        <i class="bi bi-cpu text-primary"></i>
+                        Potential System Matches Detected (@matches.Count)
+                    </h5>
+                    <p class="text-muted small mb-3">
+                        Our rule-based matching engine has identified potential relationships between this report and corresponding campus reports:
+                    </p>
+
+                    <div class="list-group list-group-flush">
+                        @foreach (var match in matches)
+                        {
+                            int targetId = match.LostItemId == Model.ItemId ? match.FoundItemId : match.LostItemId;
+                            string targetTitle = match.LostItemId == Model.ItemId ? match.FoundItemTitle : match.LostItemTitle;
+                            <div class="list-group-item px-0 py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                <div>
+                                    <span class="badge @(match.MatchScore >= 75 ? "bg-success" : "bg-primary") mb-1">
+                                        @match.MatchScore% Match Score
+                                    </span>
+                                    <h6 class="fw-bold mb-1">@targetTitle</h6>
+                                    <p class="small text-muted mb-0">@match.MatchReason</p>
+                                </div>
+                                <a asp-action="Details" asp-route-id="@targetId" class="btn btn-sm btn-outline-primary">
+                                    View Matched Item <i class="bi bi-arrow-right ms-1"></i>
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Action Sidebar -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white sticky-top" style="top: 1rem;">
+                <h5 class="fw-bold text-slate mb-3">Action Options</h5>
+
+                @if (Model.ReportType == "Found" && Model.Status == "Active")
+                {
+                    @if (Model.IsOwner)
+                    {
+                        <div class="alert alert-info small mb-3">
+                            <i class="bi bi-info-circle me-1"></i> You are the registered finder of this item.
+                        </div>
+                    }
+                    else if (Model.HasActiveClaimByCurrentUser)
+                    {
+                        <div class="alert alert-warning small mb-3">
+                            <i class="bi bi-hourglass-split me-1"></i> You have already submitted an ownership claim for this item.
+                        </div>
+                        <a asp-controller="Claims" asp-action="Details" asp-route-id="@Model.CurrentUserClaimId" class="btn btn-outline-primary w-100 mb-2">
+                            <i class="bi bi-eye me-1"></i> Track Your Claim
+                        </a>
+                    }
+                    else
+                    {
+                        <p class="text-muted small mb-3">
+                            Do you believe this belonging is yours? Submit an ownership claim with identifying details to initiate verification.
+                        </p>
+                        <a asp-controller="Claims" asp-action="Create" asp-route-itemId="@Model.ItemId" class="btn btn-primary w-100 py-2 fw-semibold mb-2">
+                            <i class="bi bi-hand-index-thumb me-1"></i> Claim This Item
+                        </a>
+                    }
+                }
+                else if (Model.Status == "Returned")
+                {
+                    <div class="alert alert-success small mb-0">
+                        <i class="bi bi-check-circle-fill me-1"></i> This item has been successfully returned to its verified owner through supervised security handover.
+                    </div>
+                }
+                else if (Model.Status == "Disposed")
+                {
+                    <div class="alert alert-secondary small mb-0">
+                        <i class="bi bi-trash3 me-1"></i> This item remained unclaimed beyond university retention limits and was authorized for campus disposal.
+                    </div>
+                }
+
+                @if (User.IsInRole("SecurityPersonnel") || User.IsInRole("CampusAdministrator") || User.IsInRole("SystemAdministrator"))
+                {
+                    <hr class="my-3" />
+                    <h6 class="fw-bold text-secondary small text-uppercase mb-2">Security Actions</h6>
+                    @if (string.IsNullOrEmpty(Model.CurrentCustodyLocation) && Model.ReportType == "Found" && Model.Status != "Returned")
+                    {
+                        <a asp-controller="Security" asp-action="AssignCustody" asp-route-itemId="@Model.ItemId" class="btn btn-outline-warning w-100 mb-2">
+                            <i class="bi bi-archive me-1"></i> Log Into Custody
+                        </a>
+                    }
+                    @if (Model.Status == "Active" || Model.Status == "Unclaimed")
+                    {
+                        <a asp-controller="Admin" asp-action="DisposeItem" asp-route-itemId="@Model.ItemId" class="btn btn-outline-danger w-100">
+                            <i class="bi bi-trash3 me-1"></i> Authorize Disposal
+                        </a>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

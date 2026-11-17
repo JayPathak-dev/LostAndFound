@@ -1,0 +1,159 @@
+@model CampusLostAndFound.ViewModels.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Campus Administrator Dashboard";
+}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <span class="badge bg-primary px-3 py-1 rounded-pill fw-semibold mb-1">
+                <i class="bi bi-shield-check me-1"></i> Campus Administration
+            </span>
+            <h2 class="fw-bold text-slate mb-1">University Lost & Found Intelligence</h2>
+            <p class="text-muted small mb-0">System performance indicators, category distributions, retention policy tracking, and audit activities.</p>
+        </div>
+        <div class="d-flex gap-2 mt-3 mt-sm-0">
+            <a asp-action="Reports" class="btn btn-primary">
+                <i class="bi bi-file-earmark-bar-graph me-1"></i> Detailed Reports
+            </a>
+            <a asp-action="AuditLogs" class="btn btn-outline-secondary">
+                <i class="bi bi-journal-text me-1"></i> Audit Trail
+            </a>
+        </div>
+    </div>
+
+    <!-- Administrative KPI Metrics -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="stats-card">
+                <div class="stats-label">Total Lost Reports</div>
+                <div class="stats-number text-danger">@Model.TotalLost</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stats-card">
+                <div class="stats-label">Total Found Reports</div>
+                <div class="stats-number text-success">@Model.TotalFound</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stats-card">
+                <div class="stats-label">Items Returned</div>
+                <div class="stats-number text-primary">@Model.TotalReturned</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stats-card">
+                <div class="stats-label">Overall Recovery Rate</div>
+                <div class="stats-number text-info">@Model.RecoveryRatePercentage%</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stats-card">
+                <div class="stats-label">Items in Custody</div>
+                <div class="stats-number text-secondary">@Model.ItemsInCustody</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stats-card">
+                <div class="stats-label">Pending Claims</div>
+                <div class="stats-number text-warning">@Model.PendingClaims</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stats-card">
+                <div class="stats-label">Unclaimed Overdue</div>
+                <div class="stats-number text-danger">@Model.UnclaimedCount</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="stats-card">
+                <div class="stats-label">Disposed / Donated</div>
+                <div class="stats-number text-muted">@Model.DisposedCount</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Distributions Grid -->
+    <div class="row g-4 mb-4">
+        <!-- Category Distribution -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-slate mb-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-pie-chart text-primary"></i> Category Distribution
+                    </h5>
+                    <a asp-action="Categories" class="btn btn-sm btn-link text-decoration-none">Manage</a>
+                </div>
+                <div class="list-group list-group-flush">
+                    @foreach (var cat in Model.CategoryBreakdown)
+                    {
+                        <div class="list-group-item px-0 py-2 d-flex justify-content-between align-items-center">
+                            <span>@cat.Key</span>
+                            <span class="badge bg-primary-subtle text-primary fw-bold rounded-pill">@cat.Value items</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Campus Location Distribution -->
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-slate mb-0 d-flex align-items-center gap-2">
+                        <i class="bi bi-geo-alt text-danger"></i> Building Incident Density
+                    </h5>
+                    <a asp-action="Locations" class="btn btn-sm btn-link text-decoration-none">Manage</a>
+                </div>
+                <div class="list-group list-group-flush">
+                    @foreach (var loc in Model.LocationBreakdown)
+                    {
+                        <div class="list-group-item px-0 py-2 d-flex justify-content-between align-items-center">
+                            <span>@loc.Key</span>
+                            <span class="badge bg-danger-subtle text-danger fw-bold rounded-pill">@loc.Value items</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent System Audit Activity -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold text-slate mb-0 d-flex align-items-center gap-2">
+                <i class="bi bi-journal-text text-secondary"></i> Recent System Audit Activity
+            </h5>
+            <a asp-action="AuditLogs" class="btn btn-sm btn-outline-primary">Full Audit Log</a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle small mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Action</th>
+                        <th>Target Record</th>
+                        <th>User / Actor</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var audit in Model.RecentAuditLogs)
+                    {
+                        <tr>
+                            <td class="text-muted" style="white-space: nowrap;">@audit.Timestamp.ToString("MMM dd - hh:mm tt")</td>
+                            <td>
+                                <span class="badge bg-light text-dark border">@audit.Action</span>
+                            </td>
+                            <td>@audit.TargetRecord #@audit.TargetRecordId</td>
+                            <td>@(audit.ActorEmail ?? "System")</td>
+                            <td class="text-truncate" style="max-width: 300px;">@audit.AdditionalInformation</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

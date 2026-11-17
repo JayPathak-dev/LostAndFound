@@ -1,0 +1,74 @@
+@model List<CampusLostAndFound.Models.CampusLocation>
+@{
+    ViewData["Title"] = "Campus Locations Management";
+}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-slate mb-1">Campus Locations</h2>
+            <p class="text-muted small mb-0">Manage university buildings, blocks, floors, and specific area landmarks.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Admin Overview
+            </a>
+            <a asp-action="CreateLocation" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i> Add Location
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Building Name</th>
+                        <th>Block / Wing</th>
+                        <th>Floor</th>
+                        <th>Specific Area</th>
+                        <th>Description / Landmark</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var loc in Model)
+                    {
+                        <tr>
+                            <td><strong>@loc.BuildingName</strong></td>
+                            <td>@(loc.BlockName ?? "-")</td>
+                            <td>@(loc.Floor ?? "-")</td>
+                            <td><strong>@loc.AreaName</strong></td>
+                            <td class="text-muted small">@loc.Description</td>
+                            <td>
+                                @if (loc.IsActive)
+                                {
+                                    <span class="badge bg-success-subtle text-success">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary-subtle text-secondary">Inactive</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a asp-action="EditLocation" asp-route-id="@loc.LocationId" class="btn btn-sm btn-outline-secondary" title="Edit">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form asp-action="ToggleLocation" asp-route-id="@loc.LocationId" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm @(loc.IsActive ? "btn-outline-danger" : "btn-outline-success")" title="@(loc.IsActive ? "Deactivate" : "Activate")">
+                                            <i class="bi @(loc.IsActive ? "bi-toggle-on" : "bi-toggle-off")"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

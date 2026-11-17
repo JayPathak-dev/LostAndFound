@@ -1,0 +1,167 @@
+@model CampusLostAndFound.ViewModels.ClaimReviewViewModel
+@{
+    ViewData["Title"] = $"Review Claim #{Model.ClaimId}";
+    var item = ViewBag.Item as CampusLostAndFound.ViewModels.ItemDetailsViewModel;
+    double autoScore = (double)(ViewBag.AutomatedScore ?? 0.0);
+    string suggested = (string)(ViewBag.SuggestedDecision ?? "ManualReview");
+}
+
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-action="Index">Security</a></li>
+            <li class="breadcrumb-item"><a asp-action="PendingClaims">Pending Claims</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Review Claim #@Model.ClaimId</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Main Verification & Comparison Column -->
+        <div class="col-lg-8">
+            <!-- Item & Claimant Overview -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="badge bg-secondary">Reviewing Claim #@Model.ClaimId</span>
+                    <span class="badge @(autoScore >= 70 ? "bg-success" : autoScore >= 40 ? "bg-warning text-dark" : "bg-danger") fs-6 px-3 py-2">
+                        Verification Confidence: @autoScore%
+                    </span>
+                </div>
+
+                <h3 class="fw-bold text-slate mb-1">@(item?.Title ?? "Misplaced Item")</h3>
+                <p class="text-muted small mb-3">
+                    Category: <strong>@(item?.CategoryName)</strong> &bull; Location: <strong>@(item?.LocationName)</strong> &bull; Incident: @item?.ItemDateTime.ToString("g")
+                </p>
+
+                <div class="p-3 bg-light rounded-3 border mb-4">
+                    <div class="row g-2 small">
+                        <div class="col-sm-6">
+                            <span class="text-muted">Item Reporter:</span> <strong>@(item?.ReporterName)</strong>
+                        </div>
+                        <div class="col-sm-6">
+                            <span class="text-muted">Current Custody:</span> <strong>@(item?.CurrentCustodyLocation ?? "Not in Custody")</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CRITICAL FEATURE: Side-by-Side Ownership Verification -->
+                <h5 class="fw-bold text-slate mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-shield-shaded text-primary"></i>
+                    Side-by-Side Attribute Verification Analysis
+                </h5>
+                <p class="text-muted small mb-3">
+                    Compare the claimant's submitted answers against the confidential private identifiers registered by the finder:
+                </p>
+
+                <!-- Comparison Cards -->
+                @if (item?.PrivateDetails != null)
+                {
+                    <div class="table-responsive mb-4">
+                        <table class="table table-bordered align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th style="width: 25%;">Verification Attribute</th>
+                                    <th style="width: 37.5%;" class="bg-primary text-white">Claimant's Submitted Details</th>
+                                    <th style="width: 37.5%;" class="bg-warning text-dark">Confidential Finder Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="fw-bold text-slate">Distinctive Marks / Scratches</td>
+                                    <td>
+                                        <div class="p-2 bg-light rounded">
+                                            <em>Claimant Statement in Claim Form</em>
+                                        </div>
+                                    </td>
+                                    <td class="bg-warning-subtle text-dark">
+                                        <strong>@(item.PrivateDetails.DistinctiveMarks ?? "None reported")</strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-slate">Hidden Features / Pockets</td>
+                                    <td>
+                                        <div class="p-2 bg-light rounded">
+                                            <em>Claimant Statement in Claim Form</em>
+                                        </div>
+                                    </td>
+                                    <td class="bg-warning-subtle text-dark">
+                                        <strong>@(item.PrivateDetails.HiddenFeatures ?? "None reported")</strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-slate">Internal Belongings / Contents</td>
+                                    <td>
+                                        <div class="p-2 bg-light rounded">
+                                            <em>Claimant Statement in Claim Form</em>
+                                        </div>
+                                    </td>
+                                    <td class="bg-warning-subtle text-dark">
+                                        <strong>@(item.PrivateDetails.InternalContents ?? "None reported")</strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold text-slate">Additional Identifiers / Suffix</td>
+                                    <td>
+                                        <div class="p-2 bg-light rounded">
+                                            <em>Claimant Statement in Claim Form</em>
+                                        </div>
+                                    </td>
+                                    <td class="bg-warning-subtle text-dark">
+                                        <strong>@(item.PrivateDetails.AdditionalIdentifiers ?? "None reported")</strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-light border small text-muted mb-4">
+                        No private details were recorded for this item. Rely on claimant description and physical inspection.
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Official Review Decision Sidebar -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white sticky-top" style="top: 1rem;">
+                <h5 class="fw-bold text-slate mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-check2-circle text-success"></i>
+                    Official Review Decision
+                </h5>
+
+                <form asp-action="ReviewClaim" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="ClaimId" />
+
+                    <div class="mb-3">
+                        <label asp-for="Status" class="form-label fw-semibold small text-muted"></label>
+                        <select asp-for="Status" class="form-select fw-semibold">
+                            <option value="Approved" class="text-success fw-bold">Approve (Ownership Verified)</option>
+                            <option value="Rejected" class="text-danger fw-bold">Reject (Unverified / Invalid)</option>
+                            <option value="ManualReview" class="text-warning fw-bold">Flag for In-Person Verification</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="ReviewNotes" class="form-label fw-semibold small text-muted"></label>
+                        <textarea asp-for="ReviewNotes" rows="4" class="form-control" placeholder="Provide justification remarks for audit trail..."></textarea>
+                        <span asp-validation-for="ReviewNotes" class="text-danger small"></span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary py-2 fw-semibold">
+                            <i class="bi bi-save me-1"></i> Save Official Decision
+                        </button>
+                        <a asp-action="PendingClaims" class="btn btn-outline-secondary">Back to Queue</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

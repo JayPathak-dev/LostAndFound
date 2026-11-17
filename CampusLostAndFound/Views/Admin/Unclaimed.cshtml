@@ -1,0 +1,80 @@
+@model List<CampusLostAndFound.ViewModels.UnclaimedItemViewModel>
+@{
+    ViewData["Title"] = "Unclaimed Items & Disposal Management";
+}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-slate mb-1">Unclaimed Items Review</h2>
+            <p class="text-muted small mb-0">Found articles tracked against campus category retention limits requiring administrative resolution.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Admin Overview
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Item Title</th>
+                            <th>Category</th>
+                            <th>Found Location</th>
+                            <th>Found Date</th>
+                            <th>Days in Custody</th>
+                            <th>Retention Policy</th>
+                            <th>Disposal Eligibility</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td><strong>@item.Title</strong></td>
+                                <td>@item.CategoryName</td>
+                                <td>@item.LocationName</td>
+                                <td class="text-muted small">@item.FoundDate.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    <span class="badge @(item.IsOverdueForDisposal ? "bg-danger" : "bg-secondary")">
+                                        @item.DaysInCustody Days
+                                    </span>
+                                </td>
+                                <td>@item.RetentionPeriodDays Days</td>
+                                <td>
+                                    @if (item.IsOverdueForDisposal)
+                                    {
+                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle">
+                                            <i class="bi bi-exclamation-circle me-1"></i> Overdue for Review
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-light text-muted border">Within Policy Period</span>
+                                    }
+                                </td>
+                                <td>
+                                    <a asp-action="DisposeItem" asp-route-itemId="@item.ItemId" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash3 me-1"></i> Authorize Disposal
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-box2-heart display-4 mb-2 d-block text-success"></i>
+                <h5>No Unclaimed Items</h5>
+                <p>All items in custody are active or have been successfully returned.</p>
+            </div>
+        }
+    </div>
+</div>

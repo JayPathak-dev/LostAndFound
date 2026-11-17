@@ -1,0 +1,86 @@
+@model List<CampusLostAndFound.ViewModels.ItemCardViewModel>
+@{
+    ViewData["Title"] = "My Reported Items";
+}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-slate mb-1">My Reported Items</h2>
+            <p class="text-muted small mb-0">List of all lost and found reports submitted from your account.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-controller="Items" asp-action="ReportLost" class="btn btn-outline-danger">
+                <i class="bi bi-exclamation-octagon me-1"></i> Report Lost
+            </a>
+            <a asp-controller="Items" asp-action="ReportFound" class="btn btn-success">
+                <i class="bi bi-plus-circle me-1"></i> Report Found
+            </a>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Item Title</th>
+                            <th>Report Type</th>
+                            <th>Category</th>
+                            <th>Location</th>
+                            <th>Incident Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        @if (!string.IsNullOrEmpty(item.ImagePath))
+                                        {
+                                            <img src="@item.ImagePath" alt="@item.Title" class="rounded" style="width: 40px; height: 40px; object-fit: cover;" />
+                                        }
+                                        else
+                                        {
+                                            <div class="bg-light rounded d-flex align-items-center justify-content-center text-muted" style="width: 40px; height: 40px;">
+                                                <i class="bi bi-image"></i>
+                                            </div>
+                                        }
+                                        <strong>@item.Title</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge badge-type-@item.ReportType">@item.ReportType</span>
+                                </td>
+                                <td>@item.CategoryName</td>
+                                <td>@item.LocationName</td>
+                                <td class="text-muted small">@item.ItemDateTime.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    <span class="badge badge-status badge-status-@item.Status">@item.Status</span>
+                                </td>
+                                <td>
+                                    <a asp-controller="Items" asp-action="Details" asp-route-id="@item.ItemId" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye me-1"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-folder-x display-4 mb-3 d-block"></i>
+                <h5>No Reports Found</h5>
+                <p>You have not logged any misplaced or discovered belongings yet.</p>
+            </div>
+        }
+    </div>
+</div>

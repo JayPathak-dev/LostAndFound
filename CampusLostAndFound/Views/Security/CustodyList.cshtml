@@ -1,0 +1,71 @@
+@model List<CampusLostAndFound.ViewModels.CustodyItemViewModel>
+@{
+    ViewData["Title"] = "Items in Security Custody";
+}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-slate mb-1">Items in Security Custody</h2>
+            <p class="text-muted small mb-0">Active log of found belongings stored in campus security lockers and deposit boxes.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Security Dashboard
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Custody ID</th>
+                            <th>Item Title</th>
+                            <th>Category</th>
+                            <th>Physical Storage Location</th>
+                            <th>Receiving Officer</th>
+                            <th>Received At</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td><strong>#@item.CustodyId</strong></td>
+                                <td><strong>@item.ItemTitle</strong></td>
+                                <td>@item.CategoryName</td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">
+                                        <i class="bi bi-archive me-1 text-primary"></i> @item.CustodyLocation
+                                    </span>
+                                </td>
+                                <td>@item.SecurityOfficerName</td>
+                                <td class="text-muted small">@item.ReceivedAt.ToString("MMM dd, yyyy - hh:mm tt")</td>
+                                <td>
+                                    <span class="badge badge-status badge-status-@item.ItemStatus">@item.ItemStatus</span>
+                                </td>
+                                <td>
+                                    <a asp-controller="Items" asp-action="Details" asp-route-id="@item.ItemId" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-archive display-4 mb-2 d-block"></i>
+                <h5>No Items Currently in Custody</h5>
+                <p>All found items have either been returned or not yet logged into physical custody lockers.</p>
+            </div>
+        }
+    </div>
+</div>

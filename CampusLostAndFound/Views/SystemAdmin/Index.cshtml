@@ -1,0 +1,77 @@
+@model List<CampusLostAndFound.Models.AuditEntry>
+@{
+    ViewData["Title"] = "System Administrator Console";
+    var roles = ViewBag.Roles as List<string>;
+}
+
+<div class="container py-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
+        <div>
+            <span class="badge bg-dark px-3 py-1 rounded-pill fw-semibold mb-1">
+                <i class="bi bi-shield-shaded me-1"></i> System Administration
+            </span>
+            <h2 class="fw-bold text-slate mb-1">System Administration Console</h2>
+            <p class="text-muted small mb-0">High-privilege user management, role enforcement, and system audit controls.</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Users" class="btn btn-primary">
+                <i class="bi bi-people me-1"></i> Manage Users & Roles
+            </a>
+            <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-speedometer2 me-1"></i> Campus Admin
+            </a>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="stats-card">
+                <div class="stats-label">Total Registered Users</div>
+                <div class="stats-number text-primary">@ViewBag.TotalUsers</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card">
+                <div class="stats-label">Active Accounts</div>
+                <div class="stats-number text-success">@ViewBag.ActiveUsers</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stats-card">
+                <div class="stats-label">Configured System Roles</div>
+                <div class="stats-number text-dark">@(roles?.Count ?? 4)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Audit Logs -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+        <h5 class="fw-bold text-slate mb-3">System-Wide Security & Audit Log</h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle small mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Action</th>
+                        <th>Target</th>
+                        <th>Actor</th>
+                        <th>Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var log in Model)
+                    {
+                        <tr>
+                            <td class="text-muted" style="white-space: nowrap;">@log.Timestamp.ToString("g")</td>
+                            <td><span class="badge bg-light text-dark border">@log.Action</span></td>
+                            <td>@log.TargetRecord #@log.TargetRecordId</td>
+                            <td>@(log.ActorEmail ?? "System")</td>
+                            <td>@log.AdditionalInformation</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

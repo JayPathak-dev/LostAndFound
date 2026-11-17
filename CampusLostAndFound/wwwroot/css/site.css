@@ -1,0 +1,382 @@
+/* Campus Lost and Found Management System - University Design System */
+:root {
+    --primary-navy: #142B4A;
+    --primary-navy-dark: #0D1E35;
+    --royal-blue: #2563EB;
+    --royal-blue-hover: #1D4ED8;
+    --accent-blue: #3B82F6;
+    --bg-light: #F8FAFC;
+    --surface-white: #FFFFFF;
+    --text-slate: #1E293B;
+    --text-muted: #64748B;
+    --border-subtle: #E2E8F0;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --card-hover-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-slate);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navbar */
+.navbar-custom {
+    background-color: var(--primary-navy);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+    color: #FFFFFF !important;
+}
+
+.navbar-brand i {
+    color: #60A5FA;
+}
+
+.nav-link {
+    color: #E2E8F0 !important;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.5rem 0.85rem !important;
+    transition: color 0.15s ease, background-color 0.15s ease;
+    border-radius: 0.375rem;
+}
+
+.nav-link:hover, .nav-link:focus {
+    color: #FFFFFF !important;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.nav-link.active {
+    color: #FFFFFF !important;
+    background-color: var(--royal-blue);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--royal-blue);
+    border-color: var(--royal-blue);
+    font-weight: 600;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--royal-blue-hover);
+    border-color: var(--royal-blue-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.btn-navy {
+    background-color: var(--primary-navy);
+    color: #FFFFFF;
+    border-color: var(--primary-navy);
+    font-weight: 600;
+    border-radius: 0.5rem;
+}
+
+.btn-navy:hover {
+    background-color: var(--primary-navy-dark);
+    color: #FFFFFF;
+    transform: translateY(-1px);
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #142B4A 0%, #1E3A8A 100%);
+    color: #FFFFFF;
+    padding: 4.5rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.hero-title {
+    font-size: 2.75rem;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+    margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: #CBD5E1;
+    margin-bottom: 2rem;
+    max-width: 650px;
+}
+
+/* Statistics Banner */
+.stats-card {
+    background: var(--surface-white);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-subtle);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--card-hover-shadow);
+}
+
+.stats-number {
+    font-size: 2.25rem;
+    font-weight: 800;
+    color: var(--primary-navy);
+    line-height: 1;
+}
+
+.stats-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 0.5rem;
+}
+
+/* Item Card */
+.item-card {
+    background: var(--surface-white);
+    border-radius: 0.75rem;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--card-shadow);
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--card-hover-shadow);
+    border-color: #CBD5E1;
+}
+
+.item-card-img-wrapper {
+    height: 180px;
+    background-color: #E2E8F0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.item-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.item-card-placeholder {
+    font-size: 3.5rem;
+    color: #94A3B8;
+}
+
+.item-card-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.item-card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-slate);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+}
+
+.item-card-desc {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    flex-grow: 1;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.item-meta-item {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.35rem;
+}
+
+/* Badges */
+.badge-status {
+    font-weight: 600;
+    font-size: 0.75rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: 9999px;
+    letter-spacing: 0.02em;
+}
+
+.badge-status-Active {
+    background-color: #ECFDF5;
+    color: #065F46;
+    border: 1px solid #A7F3D0;
+}
+
+.badge-status-Reported {
+    background-color: #EFF6FF;
+    color: #1E40AF;
+    border: 1px solid #BFDBFE;
+}
+
+.badge-status-Claimed {
+    background-color: #FEF3C7;
+    color: #92400E;
+    border: 1px solid #FDE68A;
+}
+
+.badge-status-UnderVerification {
+    background-color: #FDF4FF;
+    color: #86198F;
+    border: 1px solid #F5D0FE;
+}
+
+.badge-status-Approved {
+    background-color: #ECFDF5;
+    color: #047857;
+    border: 1px solid #6EE7B7;
+}
+
+.badge-status-Returned {
+    background-color: #F1F5F9;
+    color: #334155;
+    border: 1px solid #CBD5E1;
+}
+
+.badge-status-Unclaimed {
+    background-color: #FFF1F2;
+    color: #9F1239;
+    border: 1px solid #FECDD3;
+}
+
+.badge-status-Disposed {
+    background-color: #F1F5F9;
+    color: #64748B;
+    border: 1px solid #E2E8F0;
+}
+
+.badge-type-Lost {
+    background-color: #FEF2F2;
+    color: #991B1B;
+    border: 1px solid #FECACA;
+}
+
+.badge-type-Found {
+    background-color: #F0FDF4;
+    color: #166534;
+    border: 1px solid #BBF7D0;
+}
+
+/* Dashboard Layout */
+.dashboard-container {
+    padding: 2rem 0;
+}
+
+.dashboard-sidebar {
+    background: var(--surface-white);
+    border-radius: 0.75rem;
+    border: 1px solid var(--border-subtle);
+    padding: 1.25rem;
+    box-shadow: var(--card-shadow);
+}
+
+.sidebar-menu-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 0.85rem;
+    color: var(--text-slate);
+    text-decoration: none;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    margin-bottom: 0.25rem;
+    transition: all 0.15s ease;
+}
+
+.sidebar-menu-link:hover {
+    background-color: #F1F5F9;
+    color: var(--royal-blue);
+}
+
+.sidebar-menu-link.active {
+    background-color: #EFF6FF;
+    color: var(--royal-blue);
+    font-weight: 600;
+}
+
+.sidebar-menu-link i {
+    font-size: 1.15rem;
+}
+
+/* Private Details Card */
+.private-details-card {
+    background-color: #FFFBEB;
+    border: 1px solid #FCD34D;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+}
+
+.private-details-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #92400E;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+    background-color: var(--primary-navy);
+    color: #94A3B8;
+    padding: 2.5rem 0 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+footer a {
+    color: #CBD5E1;
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+footer a:hover {
+    color: #FFFFFF;
+}
